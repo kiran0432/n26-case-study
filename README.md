@@ -1,5 +1,5 @@
 # n26-case-study
-I have attached a terraform reference code and Below stems explain how this architecture works.
+I have attached a terraform reference code and Below stepss explains how this architecture works.
 The architecture contains a VPC, Public & Private Subnets, An ALB, a RDS, A s3bucket, EC2 machine in autoscaling mode.
 As per the architecture, when a requests hits the web url, it will pass through the ALB to the backend target configured - In this case back end servers will only accecpt request only from ALB SG
 EC2 servers will be accessed the back end database and Back end data will only accepts the requests from EC2 SG group - RDS in private subnet
