@@ -1,0 +1,33 @@
+---
+- name: Install Antivirus Agent on EC2 Instances
+  hosts: tag_Environment_production
+  gather_facts: true
+  become: true
+
+  tasks:
+    - name: Fetch Antivirus License Key from HashiCorp Vault
+      hashivault:
+        token: "{{ vault_token }}"
+        path: secret/antivirus
+        field: license_key
+      register: antivirus_license
+
+    - name: Download Antivirus Agent Installer
+      get_url:
+        url: "https://your-antivirus-link/to/installer.rpm"
+        dest: /tmp/antivirus_installer.rpm
+
+    - name: Install Antivirus Agent
+      command: "yum install -y /tmp/antivirus_installer.rpm"
+
+    - name: Configure Antivirus Agent with License Key
+      template:
+        src: antivirus_config.j2
+        dest: /etc/antivirus/config.ini
+      notify: Restart Antivirus Agent
+
+  handlers:
+    - name: Restart Antivirus Agent
+      systemd:
+        name: antivirus-agent
+        state: restarted
